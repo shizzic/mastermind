@@ -2,20 +2,25 @@
 
 # Secret code handling for mastermind game
 class Secret
-  COLORS = %w[Y B G P R W].freeze
+  attr_reader :code
 
-  attr_reader :code, :length
-
-  def initialize
-    self.length = 4
-    self.code   = Array.new(4) { COLORS.sample }.join
+  def initialize(settings)
+    self.settings = settings
+    self.code = settings.code_maker == 'PC' ? make_code_by_pc : 12
   end
 
-  def feedback(attempt, input)
-    puts "Guess #{attempt}: #{input.chars.join(' ')}  →  #{detailed_feedback(input)}\n"
+  def feedback(guess_num, input)
+    puts "Guess #{guess_num}: #{input.chars.join(' ')}  →  #{detailed_feedback(input)}\n"
   end
 
   private
+
+  def make_code_by_pc
+    colors     = settings.colors
+    length     = settings.length
+    duplicates = settings.duplicates
+    duplicates ? Array.new(length) { colors.sample }.join : colors.sample(length)
+  end
 
   def detailed_feedback(input)
     code_arr = code.chars
@@ -26,5 +31,6 @@ class Secret
     "#{exact} exact, #{near} near"
   end
 
-  attr_writer :code, :length
+  attr_accessor :settings
+  attr_writer :code
 end

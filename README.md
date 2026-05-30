@@ -12,4 +12,4 @@ cd mastermind
 ruby mastermind.rb
 ```
 
-Guess the secret 4-letter color code within 12 attempts. Available colors are `Y B G P R W`. After each guess you'll see how many letters are exactly right and how many are the right color but in the wrong position.
+Guess the secret 4-letter color code within 12 guesses. Available colors are `Y B G P R W`. After each guess you'll see how many letters are exactly right and how many are the right color but in the wrong position.
