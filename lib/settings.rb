@@ -8,6 +8,29 @@ class Settings
 
   def initialize = setup
 
+  def valid?(code)
+    return false unless code.size == length
+
+    chars = code.chars
+
+    # duplicates check
+    return false if !duplicates && chars.uniq.size != chars.size
+
+    # check if code has letters only from available colors
+    chars.each { return false unless colors.include?(it) }
+
+    true
+  end
+
+  def rules
+    puts
+    puts <<~TEXT
+      1. Available colors: #{colors.join(' ')}
+      2. Length: #{length}
+      3. Duplicates: #{duplicates ? 'Allowed' : 'Not allowed'}
+    TEXT
+  end
+
   private
 
   attr_writer :max_guesses, :length, :duplicates, :colors, :player
@@ -66,7 +89,7 @@ class Settings
   def setup_player(prompt)
     self.player = prompt.select('Who is maker of the code:') do |menu|
       menu.choice 'PC', 'PC'
-      menu.choice 'Player', 'Player'
+      menu.choice 'Player', 'Human'
     end
   end
 end

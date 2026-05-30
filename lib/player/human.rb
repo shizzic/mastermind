@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require_relative '../player'
-
 # Human player of mastermind game
 class Human < Player
-  def input(length)
-    print "\nYour input: "
-    input_value = gets.chomp.strip.upcase
-    return input_value if length == input_value.size && input_value.chars.all? { Secret::COLORS.include?(it) }
+  def make_code
+    settings.rules
+    input
+  end
 
-    puts "Your input must be exectly #{length} long and contain only these letters (colors):"
-    puts Secret::COLORS.join(' ')
-    input(length)
+  def input
+    loop do
+      code = gets.chomp.strip.upcase
+      return code if settings.valid?(code)
+
+      settings.rules
+    end
   end
 end

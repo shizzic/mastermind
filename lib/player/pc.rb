@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative '../player'
-
 # PC player of mastermind game
 class PC < Player
-  def input(length)
-    print "\nYour input: "
-    input_value = gets.chomp.strip.upcase
-    return input_value if length == input_value.size && input_value.chars.all? { Secret::COLORS.include?(it) }
+  def make_code
+    colors     = settings.colors
+    length     = settings.length
+    duplicates = settings.duplicates
 
-    puts "Your input must be exectly #{length} long and contain only these letters (colors):"
-    puts Secret::COLORS.join(' ')
-    input(length)
+    if duplicates
+      Array.new(length) { colors.sample }.join
+    else
+      colors.sample(length)
+    end
   end
 end

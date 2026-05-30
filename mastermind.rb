@@ -7,43 +7,46 @@ require_relative 'lib/secret'
 # Mastermind cmd game
 class Mastermind
   def initialize
-    self.settings     = Settings.new
-    self.guesses_left = settings.max_guesses
-    self.player       = settings.player == 'PC' ? PC.new : Human.new
-    self.secret       = Secret.new(settings)
+    self.settings = Settings.new
+    self.player   = settings.player == 'PC' ? PC.new(settings) : Human.new(settings)
+    self.secret   = Secret.new(player)
   end
 
   def start
-    explain
+    explain if settings.player == 'Human'
 
-    input = ''
-    input = guess until input == secret.code || guesses_left.zero?
+    turn = 0
+    code = nil
 
-    if input == secret.code then puts "You won! Number of tries: #{settings.max_guesses - guesses_left}"
-    else puts 'You lost!'
+    loop do
+      turn += 1
+      code = guess(turn)
+      break if secret.code.eql?(code) || turn == settings.max_guesses
     end
+
+    puts
+    puts code == secret.code ? "You won! Number of guesses: #{turn}" : 'You lost!'
   end
 
   private
 
-  attr_accessor :settings, :secret, :player, :guesses_left
+  attr_accessor :settings, :secret, :player
 
-  def guess
-    self.guesses_left -= 1
-    input = player.input(secret.length)
-    secret.feedback(settings.max_guesses - guesses_left, input)
-    input
+  def guess(turn)
+    code = player.input
+    secret.feedback(turn, code) unless code == secret.code
+    code
   end
 
   # explaining rules of the game
   def explain
-    puts "\nWelcome to mastermind game!"
-    puts '1. You need to guees 4 length code of uppercase first letters of colors.'
-    puts "2. Available colors are: #{Secret::COLORS.join(' ')}"
-    puts '3. Your answer should look like (no spaces): BGGR'
-    puts '4. I will be helping you with output like: Guess 1: R R G B  →  1 exact, 2 near'
-    puts "5. You will have #{guesses_left} guesses left."
-    puts "6. Input letters can be downcase. It's irrelevant.\n"
+    puts <<~TEXT
+
+      Welcome to mastermind game!
+      1. Your answer should look like (no spaces): BGGR
+      2. I will be helping you with output like: Guess 1: R R G B  →  1 exact, 2 near
+      3. Input letters can be downcase. It's irrelevant.
+    TEXT
   end
 end
 
