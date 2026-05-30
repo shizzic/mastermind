@@ -11,7 +11,7 @@ class Mastermind
     self.pc       = PC.new(settings)
     self.human    = Human.new(settings)
 
-    choose_player_and_secret
+    choose_player_and_code_maker
   end
 
   def start
@@ -34,7 +34,7 @@ class Mastermind
 
   attr_accessor :settings, :secret, :player, :human, :pc
 
-  def choose_player_and_secret
+  def choose_player_and_code_maker
     self.player = settings.player == 'PC' ? pc : human
 
     # cause code_maker is always opposite from the player
