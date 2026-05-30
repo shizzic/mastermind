@@ -4,8 +4,8 @@
 class Secret
   attr_reader :code
 
-  def initialize(player)
-    self.code = player.make_code
+  def initialize(code_maker)
+    self.code = code_maker.make_code
   end
 
   def feedback(turn, p_code)

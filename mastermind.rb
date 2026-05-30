@@ -8,8 +8,10 @@ require_relative 'lib/secret'
 class Mastermind
   def initialize
     self.settings = Settings.new
-    self.player   = settings.player == 'PC' ? PC.new(settings) : Human.new(settings)
-    self.secret   = Secret.new(player)
+    self.pc       = PC.new(settings)
+    self.human    = Human.new(settings)
+
+    choose_player_and_secret
   end
 
   def start
@@ -21,7 +23,7 @@ class Mastermind
     loop do
       turn += 1
       code = guess(turn)
-      break if secret.code.eql?(code) || turn == settings.max_guesses
+      break if secret.code.eql?(code) || turn.eql?(settings.max_guesses)
     end
 
     puts
@@ -30,11 +32,19 @@ class Mastermind
 
   private
 
-  attr_accessor :settings, :secret, :player
+  attr_accessor :settings, :secret, :player, :human, :pc
+
+  def choose_player_and_secret
+    self.player = settings.player == 'PC' ? pc : human
+
+    # cause code_maker is always opposite from the player
+    code_maker  = settings.player == 'PC' ? human : pc
+    self.secret = Secret.new(code_maker)
+  end
 
   def guess(turn)
     code = player.input
-    secret.feedback(turn, code) unless code == secret.code
+    secret.feedback(turn, code) unless secret.code.eql?(code)
     code
   end
 
@@ -43,8 +53,8 @@ class Mastermind
     puts <<~TEXT
 
       Welcome to mastermind game!
-      1. Your answer should look like (no spaces): BGGR
-      2. I will be helping you with output like: Guess 1: R R G B  →  1 exact, 2 near
+      1. Your answer should look like (no spaces): #{pc.make_code.join}
+      2. I will be helping you with output like: Guess 1: #{pc.make_code.join(' ')}  →  1 exact, 2 near
       3. Input letters can be downcase. It's irrelevant.
     TEXT
   end

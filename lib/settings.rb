@@ -14,7 +14,7 @@ class Settings
     chars = code.chars
 
     # duplicates check
-    return false if !duplicates && chars.uniq.size != chars.size
+    return false if !duplicates && !chars.uniq.size.eql?(chars.size)
 
     # check if code has letters only from available colors
     chars.each { return false unless colors.include?(it) }
@@ -73,6 +73,16 @@ class Settings
   end
 
   def setup_colors(prompt)
+    if !duplicates && length == 6
+      colors = %w[R B G P Y W]
+    else
+      setup_colors_manually(prompt)
+    end
+
+    colors.freeze
+  end
+
+  def setup_colors_manually(prompt)
     self.colors = prompt.multi_select('Choose colors to include:', min: duplicates ? 2 : length) do |menu|
       menu.choice 'Red    (R)', 'R'
       menu.choice 'Blue   (B)', 'B'
@@ -81,13 +91,11 @@ class Settings
       menu.choice 'Yellow (Y)', 'Y'
       menu.choice 'White  (W)', 'W'
     end
-
-    colors.freeze
   end
 
   # PC or human
   def setup_player(prompt)
-    self.player = prompt.select('Who is maker of the code:') do |menu|
+    self.player = prompt.select('Who will be playing:') do |menu|
       menu.choice 'PC', 'PC'
       menu.choice 'Player', 'Human'
     end
