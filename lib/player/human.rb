@@ -4,13 +4,13 @@
 class Human < Player
   def make_code
     settings.rules
-    input
+    input(creating: true)
   end
 
-  def input
+  def input(creating: false)
     loop do
       puts
-      print 'Your guess: '
+      print creating ? 'Create a code: ' : 'Your guess: '
 
       code = gets.chomp.strip.upcase
       return code if settings.valid?(code)

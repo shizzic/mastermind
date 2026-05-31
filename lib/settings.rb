@@ -4,7 +4,7 @@ require 'tty-prompt' # Love the gem
 
 # Settings for mastermind game
 class Settings
-  attr_reader :max_guesses, :length, :duplicates, :colors, :player
+  attr_reader :max_guesses, :length, :duplicates, :colors, :player, :pc_strategy
 
   def initialize = setup
 
@@ -23,8 +23,8 @@ class Settings
   end
 
   def rules
-    puts
     puts <<~TEXT
+
       1. Available colors: #{colors.join(' ')}
       2. Length: #{length}
       3. Duplicates: #{duplicates ? 'Allowed' : 'Not allowed'}
@@ -33,7 +33,7 @@ class Settings
 
   private
 
-  attr_writer :max_guesses, :length, :duplicates, :colors, :player
+  attr_writer :max_guesses, :length, :duplicates, :colors, :player, :pc_strategy
 
   def setup
     prompt = TTY::Prompt.new
@@ -42,26 +42,27 @@ class Settings
     setup_duplicates(prompt)
     setup_colors(prompt)
     setup_player(prompt)
+    setup_pc_strategy(prompt) if player.eql?('PC')
   end
 
   # how many guesses
   def setup_max_guesses(prompt)
     self.max_guesses = prompt.select('Choose how many guesses will be used:') do |menu|
-      menu.choice '6', 6
-      menu.choice '8', 8
-      menu.choice '10', 10
-      menu.choice '12', 12
-    end
+      menu.choice 6
+      menu.choice 8
+      menu.choice 10
+      menu.choice 12
+    end.to_i
   end
 
   # length of the code
   def setup_length(prompt)
     self.length = prompt.select('Choose length of the code:') do |menu|
-      menu.choice '3', 3
-      menu.choice '4', 4
-      menu.choice '5', 5
-      menu.choice '6', 6
-    end
+      menu.choice 3
+      menu.choice 4
+      menu.choice 5
+      menu.choice 6
+    end.to_i
   end
 
   # are duplicates allowed?
@@ -96,8 +97,16 @@ class Settings
   # PC or human
   def setup_player(prompt)
     self.player = prompt.select('Who will be playing:') do |menu|
-      menu.choice 'PC', 'PC'
+      menu.choice 'PC'
       menu.choice 'Player', 'Human'
+    end
+  end
+
+  # choose strategy if PC is a player
+  def setup_pc_strategy(prompt)
+    self.pc_strategy = prompt.select('PC strategy:') do |menu|
+      menu.choice 'Random'
+      menu.choice 'Smart'
     end
   end
 end
