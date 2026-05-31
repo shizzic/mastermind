@@ -42,7 +42,7 @@ class Mastermind
   end
 
   def guess(turn)
-    code = player.input
+    code = player.input(exact: secret.exact, near: secret.near)
     puts
     puts secret.feedback(turn: turn, input_code: code)
     code
@@ -76,7 +76,7 @@ class Mastermind
   def declare(turn, code)
     puts
     print settings.player.eql?('PC') ? 'PC' : 'You'
-    puts code == secret.code ? " won! Number of guesses: #{turn}" : ' lost!'
+    puts secret.code.eql?(code) ? " won! Number of guesses: #{turn}" : ' lost!'
     puts
   end
 end

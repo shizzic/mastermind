@@ -8,8 +8,8 @@ class Player
     self.settings = settings
   end
 
-  def make_code(_player) = raise notImplementedError
-  def input              = raise notImplementedError
+  def make_code                  = raise notImplementedError
+  def input(_exact: 0, _near: 0) = raise notImplementedError
 
   private
 

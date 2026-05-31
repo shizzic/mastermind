@@ -7,7 +7,7 @@ class Human < Player
     input(creating: true)
   end
 
-  def input(creating: false)
+  def input(creating: false, **)
     loop do
       puts
       print creating ? 'Create a code: ' : 'Your guess: '

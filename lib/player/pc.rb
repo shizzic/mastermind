@@ -9,12 +9,14 @@ class PC < Player
     super
     self.random = Random.new(settings)
 
-    require_relative "pc_strategies/#{settings.pc_strategy.downcase}"
-    self.strategy = Object.const_get(settings.pc_strategy).new(settings)
+    unless settings.pc_strategy.nil? # rubocop:disable Style/GuardClause
+      require_relative "pc_strategies/#{settings.pc_strategy.downcase}"
+      self.strategy = Object.const_get(settings.pc_strategy).new(settings)
+    end
   end
 
   def make_code = random.input
-  def input     = strategy.input
+  def input(...) = strategy.input(...)
 
   private
 
