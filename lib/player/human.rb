@@ -9,6 +9,9 @@ class Human < Player
 
   def input
     loop do
+      puts
+      print 'Your guess: '
+
       code = gets.chomp.strip.upcase
       return code if settings.valid?(code)
 

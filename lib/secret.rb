@@ -8,18 +8,18 @@ class Secret
     self.code = code_maker.make_code
   end
 
-  def feedback(turn, p_code)
-    puts
-    puts "Guess #{turn}: #{p_code.chars.join(' ')}  →  #{detailed_feedback(p_code)}"
+  # gets feedback about input code
+  def feedback(turn, input_code, compare_to_code = code)
+    "Guess #{turn}: #{input_code.chars.join(' ')}  →  #{detailed_feedback(input_code, compare_to_code)}"
   end
 
   private
 
-  def detailed_feedback(p_code)
-    chars = code.chars
+  def detailed_feedback(input_code, compare_to_code)
+    chars = compare_to_code.chars
 
-    exact = p_code.chars.zip(chars).count { |a, b| a == b }
-    near = (p_code.chars & chars).sum { |c| [p_code.chars.count(c), chars.count(c)].min } - exact
+    exact = input_code.chars.zip(chars).count { |a, b| a == b }
+    near = (input_code.chars & chars).sum { |c| [input_code.chars.count(c), chars.count(c)].min } - exact
 
     "#{exact} exact, #{near} near"
   end

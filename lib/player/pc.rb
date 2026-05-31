@@ -10,7 +10,7 @@ class PC < Player
     if duplicates
       Array.new(length) { colors.sample }.join
     else
-      colors.sample(length)
+      colors.sample(length).join
     end
   end
 end

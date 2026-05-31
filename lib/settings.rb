@@ -74,7 +74,7 @@ class Settings
 
   def setup_colors(prompt)
     if !duplicates && length == 6
-      colors = %w[R B G P Y W]
+      self.colors = %w[R B G P Y W]
     else
       setup_colors_manually(prompt)
     end

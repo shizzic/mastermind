@@ -44,19 +44,32 @@ class Mastermind
 
   def guess(turn)
     code = player.input
-    secret.feedback(turn, code) unless secret.code.eql?(code)
+    puts
+    puts secret.feedback(turn, code)
     code
   end
 
   # explaining rules of the game
   def explain
-    puts <<~TEXT
+    example_code, example_guess_code = make_example_codes
 
+    puts <<~TEXT
       Welcome to mastermind game!
-      1. Your answer should look like (no spaces): #{pc.make_code.join}
-      2. I will be helping you with output like: Guess 1: #{pc.make_code.join(' ')}  →  1 exact, 2 near
+      1. Your answer should look like (no spaces): #{example_code}
+      2. I will be helping you with output like:
+         #{secret.feedback(1, example_guess_code, example_code)}
       3. Input letters can be downcase. It's irrelevant.
     TEXT
+  end
+
+  def make_example_codes
+    example_code       = pc.make_code
+    example_guess_code = loop do
+      code = pc.make_code
+      break code unless example_code.eql?(code)
+    end
+
+    [example_code, example_guess_code]
   end
 end
 
