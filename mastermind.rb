@@ -23,7 +23,7 @@ class Mastermind
     loop do
       turn += 1
       code = guess(turn)
-      break if secret.code.eql?(code) || turn.eql?(settings.max_guesses)
+      break if secret.code == code || turn == settings.max_guesses
     end
 
     declare(turn, code)
@@ -66,7 +66,7 @@ class Mastermind
     example_code       = pc.make_code
     example_guess_code = loop do
       code = pc.make_code
-      break code unless example_code.eql?(code)
+      break code unless example_code == code
     end
 
     [example_code, example_guess_code]
@@ -75,8 +75,8 @@ class Mastermind
   # declare result of the game
   def declare(turn, code)
     puts
-    print settings.player.eql?('PC') ? 'PC' : 'You'
-    puts secret.code.eql?(code) ? " won! Number of guesses: #{turn}" : ' lost!'
+    print settings.player == 'PC' ? 'PC' : 'You'
+    puts secret.code == code ? " won! Number of guesses: #{turn}" : ' lost!'
     puts
   end
 end

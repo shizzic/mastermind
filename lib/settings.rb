@@ -4,6 +4,17 @@ require 'tty-prompt' # Love the gem
 
 # Settings for mastermind game
 class Settings
+  MIN_CODE_LENGTH = 3
+  MAX_CODE_LENGTH = 6
+  COLORS = {
+    'R' => 'Red    (R)',
+    'B' => 'Blue   (B)',
+    'G' => 'Green  (G)',
+    'P' => 'Purple (P)',
+    'Y' => 'Yellow (Y)',
+    'W' => 'White  (W)'
+  }.freeze
+
   attr_reader :max_guesses, :length, :duplicates, :colors, :player, :pc_strategy
 
   def initialize = setup
@@ -14,7 +25,7 @@ class Settings
     chars = code.chars
 
     # duplicates check
-    return false if !duplicates && !chars.uniq.size.eql?(chars.size)
+    return false if !duplicates && chars.uniq.size != chars.size
 
     # check if code has letters only from available colors
     chars.each { return false unless colors.include?(it) }
@@ -42,7 +53,7 @@ class Settings
     setup_duplicates(prompt)
     setup_colors(prompt)
     setup_player(prompt)
-    setup_pc_strategy(prompt) if player.eql?('PC')
+    setup_pc_strategy(prompt) if player == 'PC'
   end
 
   # how many guesses
@@ -58,10 +69,7 @@ class Settings
   # length of the code
   def setup_length(prompt)
     self.length = prompt.select('Choose length of the code:') do |menu|
-      menu.choice 3
-      menu.choice 4
-      menu.choice 5
-      menu.choice 6
+      MIN_CODE_LENGTH.upto(MAX_CODE_LENGTH) { menu.choice(it) }
     end.to_i
   end
 
@@ -74,24 +82,17 @@ class Settings
   end
 
   def setup_colors(prompt)
-    if !duplicates && length == 6
-      self.colors = %w[R B G P Y W]
+    if !duplicates && length == MAX_CODE_LENGTH
+      self.colors = COLORS.keys
     else
       setup_colors_manually(prompt)
     end
-
-    colors.freeze
   end
 
   def setup_colors_manually(prompt)
     self.colors = prompt.multi_select('Choose colors to include:', min: duplicates ? 2 : length) do |menu|
-      menu.choice 'Red    (R)', 'R'
-      menu.choice 'Blue   (B)', 'B'
-      menu.choice 'Green  (G)', 'G'
-      menu.choice 'Purple (P)', 'P'
-      menu.choice 'Yellow (Y)', 'Y'
-      menu.choice 'White  (W)', 'W'
-    end
+      COLORS.each { |key, label| menu.choice label, key }
+    end.freeze
   end
 
   # PC or human
@@ -105,7 +106,7 @@ class Settings
   # choose strategy if PC is a player
   def setup_pc_strategy(prompt)
     self.pc_strategy = prompt.select('PC strategy:') do |menu|
-      menu.choice 'Random'
+      menu.choice 'Random', 'Rand'
       menu.choice 'Smart'
     end
   end

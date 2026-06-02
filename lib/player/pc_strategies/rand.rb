@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Random strategy for PC in Mastermind game
-class Random
+class Rand
   def initialize(settings)
     self.settings = settings
   end

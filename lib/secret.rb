@@ -5,7 +5,9 @@ class Secret
   attr_reader :code, :near, :exact
 
   def initialize(code_maker)
-    self.code = code_maker.make_code
+    self.code  = code_maker.make_code
+    self.near  = 0
+    self.exact = 0
   end
 
   # gets feedback about input code

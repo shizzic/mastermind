@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
-# Random strategy for PC in Mastermind game
+# Smart strategy for PC in Mastermind game
 class Smart
   def initialize(settings)
     self.settings = settings
     self.tried    = []
+
+    self.colors     = settings.colors
+    self.length     = settings.length
+    self.duplicates = settings.duplicates
   end
 
-  def input(exact: nil, near: nil)
-    colors     = settings.colors
-    length     = settings.length
-    duplicates = settings.duplicates
-
+  def input(exact:, near:)
     if duplicates
       Array.new(length) { colors.sample }.join
     else
@@ -21,5 +21,5 @@ class Smart
 
   private
 
-  attr_accessor :settings, :tried
+  attr_accessor :settings, :tried, :color, :length, :duplicates
 end
