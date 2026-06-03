@@ -106,7 +106,7 @@ class Settings
   # choose strategy if PC is a player
   def setup_pc_strategy(prompt)
     self.pc_strategy = prompt.select('PC strategy:') do |menu|
-      menu.choice 'Random', 'Rand'
+      menu.choice 'Random'
       menu.choice 'Smart'
     end
   end
